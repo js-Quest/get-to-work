@@ -19,7 +19,6 @@
   },
   "homepage": "https://github.com/js-Quest/get-to-work#readme",
   "dependencies": {
-    "express": "^4.18.2",
     "inquirer": "^8.2.4",
     "mysql2": "^3.3.0"
   }

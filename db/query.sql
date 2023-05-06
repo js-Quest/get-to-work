@@ -33,9 +33,7 @@ JOIN employee manager ON manager.id = employee.manager_id;
 -- =================================
 
 -- option VIEW ALL ROLES
-
 USE personnel_db;
-
 SELECT
   role.id AS id,
   role.title AS title,
@@ -43,3 +41,23 @@ SELECT
   role.salary AS salary
   FROM role
   JOIN department ON role.department_id = department.id;
+
+
+-- ===============================
+-- option ADD A DEPARTMENT
+USE personnel_db;
+INSERT INTO department (name)
+  VALUES ('anotherDepartment');
+
+INSERT INTO department (name)
+VALUES (?);
+
+-- ===============================
+-- option ADD A ROLE
+INSERT INTO role (title, salary, department_id)
+SELECT ?, ?, department.id FROM department WHERE department.name = ?;
+
+-- ===============================
+-- option ADD EMPLOYEE
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+SELECT ?, ?, role.id FROM role WHERE role.title = ?
