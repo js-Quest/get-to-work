@@ -1,16 +1,22 @@
-const { viewDepartments, viewRoles, viewEmployees, addDepartment, addRole, addEmployee, updateRole} = require('./lib/choices')
+const { viewDepartments, viewRoles, viewEmployees, addDepartment, addRole, addEmployee, updateRole} = require('./lib/choices');
+
+const express = require('express');
 const mysql= require('mysql2');
 const inquirer = require('inquirer');
 
 const PORT = process.env.PORT || 3001;
 const app = express();
 
+// Express middleware
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 
 // connect to database
 const db = mysql.createConnection(
   {
     host: 'localhost',
     user: 'root',
+    // enter your mySQL password
     password: 'roothere',
     database: 'personnel_db'
   },
@@ -18,10 +24,11 @@ const db = mysql.createConnection(
 );
 
 function init() {
-  inquirer.createPromptModule([
+  inquirer.prompt([
     {
       type: 'list',
       message: 'What would you like to do?',
+      name: 'start',
       choices: [
         'View all departments', 
         'View all roles', 
@@ -62,4 +69,6 @@ function init() {
 
     }
   })
-}
+};
+init();
+
