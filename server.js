@@ -1,18 +1,10 @@
-const { viewDepartments, viewRoles, viewEmployees, addDepartment, addRole, addEmployee, updateRole} = require('./lib/choices');
+// const { viewDepartments, viewRoles, viewEmployees, addDepartment, addRole, addEmployee, updateRole} = require('./lib/choices');
 
-const express = require('express');
-const mysql= require('mysql2');
 const inquirer = require('inquirer');
-
-const PORT = process.env.PORT || 3001;
-const app = express();
-
-// Express middleware
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
-
+const mysql = require('mysql2');
 // connect to database
 const db = mysql.createConnection(
+
   {
     host: 'localhost',
     user: 'root',
@@ -22,6 +14,9 @@ const db = mysql.createConnection(
   },
   console.log('//connected to personnel_db database!//')
 );
+
+
+
 
 function init() {
   inquirer.prompt([
@@ -36,13 +31,14 @@ function init() {
         'Add a department', 
         'Add a role', 
         'Add an employee', 
-        'Update an employee role', 
-      ]
+        'Update an employee role',
+        'EXIT application'
+      ],
     }
   ])
-  .then(function(answer) {
+  .then((answer) => {
     console.log(answer);
-    switch (answer.choice) {
+    switch (answer.start) {
       case 'View all departments':
         viewDepartments();
         break;
@@ -64,11 +60,107 @@ function init() {
       case 'Update an employee role':
         updateRole();
         break;
+      case 'EXIT application':
+        exit();
+        break;
       default:
-        console.log('error, not a valid choice')
+        console.log("ERROR, somethin ain't right")
 
     }
   })
 };
+
 init();
+
+// SEE MORE NOTES IN query.sql FILE
+
+// exit app function
+function exit() {
+  console.log('Bye!');
+  db.end();
+}
+
+// view all departments
+function viewDepartments() {
+  const sqlString = `
+    SELECT department.id, 
+    department.name FROM department;
+    `;
+  db.query(sqlString, (err, result) => {
+    if (err) throw err;
+    console.table(result);
+    init();
+  })
+};
+
+// view all roles
+function viewRoles() {
+  const sqlString = `
+    SELECT role.id, 
+    role.title, 
+    department.name AS department, 
+    role.salary 
+    FROM role 
+    JOIN department ON role.department_id = department.id;
+    `;
+  db.query(sqlString, (err, result) => {
+    if (err) throw err;
+    console.table(result);
+    init();
+  })
+};
+
+// view all employees
+function viewEmployees() {
+  const sqlString = `
+    SELECT employee.id,  
+    employee.first_name, 
+    employee.last_name, 
+    role.title, 
+    department.name AS department,
+    role.salary,
+    CONCAT(manager.first_name, ' ', manager.last_name) AS manager 
+    FROM employee
+    JOIN role ON employee.role_id = role.id
+    JOIN department on role.department_id = department.id
+    LEFT JOIN employee manager ON manager.id = employee.manager_id;
+    `;
+  db.query(sqlString, (err, result) => {
+    if (err) throw err;
+    console.table(result);
+    init();
+  })
+};
+
+// add a department
+function addDepartment() {
+  inquirer.prompt([
+    {
+      type: 'input',
+      name: 'name',
+      message: 'What is the name of the new department?'
+    }
+  ])
+  .then((answer) => {
+    const { name } = answer;
+    const sqlString = `INSERT INTO department (name) VALUES (?)`;
+    db.query(sqlString, [name], (err, result) => {
+      if (err) throw err;
+      console.log('<<<//------successfully added new department\\------>>>');
+      viewDepartments();
+    })
+  })
+};
+
+// add a role
+function addRole() { }
+
+// add an employee
+function addEmployee() { }
+
+// update an employee's role
+function updateRole() { }
+
+
+
 
