@@ -28,7 +28,7 @@ JOIN role ON employee.role_id = role.id
 JOIN department on role.department_id = department.id
 
 -- using alias 'manager' as the second instance of 'employee' table, to reference itself so that we can get the possible manager name for that employee.
-JOIN employee manager ON manager.id = employee.manager_id;
+LEFT JOIN employee manager ON manager.id = employee.manager_id;
 
 -- =================================
 
@@ -40,6 +40,7 @@ SELECT
   department.name AS department,
   role.salary AS salary
   FROM role
+  -- join department table on the common ID key
   JOIN department ON role.department_id = department.id;
 
 
@@ -68,3 +69,10 @@ SELECT ?, ?, role.id FROM role WHERE role.title = ?
 -- ===============================
 -- option UPDATE EMPLOYEE ROLE
 UPDATE employee SET role_id = ? WHERE first_name = ? AND last_name = ?
+
+
+-- ===============================
+-- option DELETE employee
+-- need choices for existing employees
+SELECT * FROM employee;
+DELETE FROM employee WHERE id = ?;
