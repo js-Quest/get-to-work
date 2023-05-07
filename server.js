@@ -194,7 +194,7 @@ function addRole() {
 };
 
 
-// add an employee
+// add an employee - Michael Reagan suggested promises would be very helpful in this project, so I researched more about promises.
 function addEmployee() { 
   const sqlStr1 = `SELECT id, title FROM role;`;
   let firstInquiry;
@@ -277,7 +277,7 @@ function addEmployee() {
 
 // update an employee's role
 function updateRole() { 
-  const sqlStr1 = `SELECT first_name, last_name FROM employees`;
+  const sqlStr1 = `SELECT first_name, last_name FROM employee`;
   let firstInquiry;
   Promise.resolve()
   .then(()=>{
@@ -290,15 +290,15 @@ function updateRole() {
   })
   .then((employeeResult) => {
     // get array of existing employees for the prompt choices
-    const employees = employeeResult.map((item) => 
+    const employee = employeeResult.map((item) => 
       `${item.first_name} ${item.last_name}`);
-
+        console.log(employee);
       return inquirer.prompt([
         {
-          type: 'input',
+          type: 'list',
           name: 'employee',
           message: 'Which employee needs their role updated?',
-          choices: employees
+          choices: employee
         }
       ])
   })
@@ -308,8 +308,37 @@ function updateRole() {
     const firstName = thisEmployee[0];
     const lastName = thisEmployee[1];
     const sqlStr2 = `SELECT title FROM role`;
+    return new Promise((resolve,reject)=> {
+      db.query(sqlStr2, (err,result) => {
+        if(err) reject(err)
+        else resolve(result);
+      })
+    })
+    .then((rolesResult) => {
+      const roles = rolesResult.map((item)=> item.title)
+      inquirer.prompt([
+        {
+          type: 'list',
+          name: 'role',
+          message: 'What role would you like to assign?',
+          choices: roles
+        }
+      ])
+      .then((answer)=> {
+        const sqlString3 = `SELECT id FROM role WHERE title = ?`;
+        db.query(sqlString3, answer.role, (err,result) => {
+          if (err) throw err;
+          const roleId = result[0].id;
+          const sqlString = `UPDATE employee SET role_id = ? WHERE first_name = ? AND last_name = ?'`
+          db.query(sqlString, [roleId, firstName, lastName], (err,result)=>{
+            if (err) throw err;
+            console.log('<<<///------successfully updated Employee Role///------>>>')
+            viewEmployees();
+          })
+        })
+      })  
+    })  
   })
-    
   
   
 }

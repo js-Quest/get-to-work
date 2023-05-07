@@ -49,3 +49,4 @@
   // prompts
     // choose employee from existing list
     // choose role from existing list
+    // update record

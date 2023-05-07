@@ -67,3 +67,4 @@ SELECT ?, ?, role.id FROM role WHERE role.title = ?
 
 -- ===============================
 -- option UPDATE EMPLOYEE ROLE
+UPDATE employee SET role_id = ? WHERE first_name = ? AND last_name = ?
