@@ -1,5 +1,4 @@
-// const { viewDepartments, viewRoles, viewEmployees, addDepartment, addRole, addEmployee, updateRole} = require('./lib/choices');
-
+const figlet = require("figlet");
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
 // connect to database
@@ -16,7 +15,15 @@ const db = mysql.createConnection(
   console.log('//connected to personnel_db database!//')
 );
 
-
+figlet("Employee Database", function (err, data) {
+  if (err) {
+    console.log("Something went wrong...");
+    console.dir(err);
+    return;
+  }
+  console.log(data);
+  init();
+});
 
 function init() {
   inquirer.prompt([
@@ -73,8 +80,6 @@ function init() {
       }
     })
 };
-
-init();
 
 // SEE EVEN MORE NOTES IN query.sql FILE
 
@@ -318,30 +323,30 @@ function updateRole() {
           else resolve(result);
         })
       })
-        .then((rolesResult) => {
-          const roles = rolesResult.map((item) => item.title)
-          inquirer.prompt([
-            {
-              type: 'list',
-              name: 'role',
-              message: 'What role would you like to assign?',
-              choices: roles
-            }
-          ])
-            .then((answer) => {
-              const sqlString3 = `SELECT id FROM role WHERE title = ?`;
-              db.query(sqlString3, answer.role, (err, result) => {
-                if (err) throw err;
-                const roleId = result[0].id;
-                const sqlString = `UPDATE employee SET role_id = ? WHERE first_name = ? AND last_name = ?`
-                db.query(sqlString, [roleId, firstName, lastName], (err, result) => {
-                  if (err) throw err;
-                  console.log('<<<///------successfully updated Employee Role///------>>>')
-                  viewEmployees();
-                })
-              })
-            })
+    })
+    .then((rolesResult) => {
+      const roles = rolesResult.map((item) => item.title)
+      inquirer.prompt([
+        {
+          type: 'list',
+          name: 'role',
+          message: 'What role would you like to assign?',
+          choices: roles
+        }
+      ])
+    })
+    .then((answer) => {
+      const sqlString3 = `SELECT id FROM role WHERE title = ?`;
+      db.query(sqlString3, answer.role, (err, result) => {
+        if (err) throw err;
+        const roleId = result[0].id;
+        const sqlString = `UPDATE employee SET role_id = ? WHERE first_name = ? AND last_name = ?`
+        db.query(sqlString, [roleId, firstName, lastName], (err, result) => {
+          if (err) throw err;
+          console.log('<<<///------successfully updated Employee Role///------>>>')
+          viewEmployees();
         })
+      })
     })
 };
 
