@@ -138,7 +138,7 @@ function addDepartment() {
     {
       type: 'input',
       name: 'name',
-      message: 'What is the name of the new department?'
+      message: 'What is the name of the new Department?'
     }
   ])
   .then((answer) => {
@@ -146,14 +146,53 @@ function addDepartment() {
     const sqlString = `INSERT INTO department (name) VALUES (?)`;
     db.query(sqlString, [name], (err, result) => {
       if (err) throw err;
-      console.log('<<<//------successfully added new department\\------>>>');
+      console.log('<<<//------successfully added new Department//------>>>');
       viewDepartments();
     })
   })
 };
 
 // add a role
-function addRole() { }
+function addRole() { 
+  const sqlString = `SELECT department.name FROM department`;
+  db.query(sqlString, (err, result) => {
+    if (err) throw err;
+    const departments = result.map((item) => `${item.name}`);
+    inquirer.prompt([
+      {
+        type: 'input',
+        name: 'title',
+        message: 'what is the title of the new Role?'
+      },
+      {
+        type: 'input',
+        name: 'salary',
+        message: 'what is the salary of this role?'
+      },
+      {
+        type: 'list',
+        name:'department',
+        message: 'what department does this role belong to?',
+        choices: [...departments]
+      }
+    ])
+    .then((answer) => {
+      const { title, salary, department } = answer;
+      const sqlString = `
+        INSERT INTO role (title, salary, department_id)
+        SELECT ?, ?, department.id 
+        FROM department WHERE department.name = ?`;
+      db.query(sqlString, [title, salary, department], (err, result) => {
+        if (err) throw err;
+        console.log('<<<///------successfully added new Role///------>>>');
+        viewRoles();
+      })
+    })
+  })
+};
+
+// For ADDING EMPLOYEE dependent functions
+function selectDepartment
 
 // add an employee
 function addEmployee() { }

@@ -54,10 +54,16 @@ VALUES (?);
 
 -- ===============================
 -- option ADD A ROLE
+
+-- need department choices
 INSERT INTO role (title, salary, department_id)
 SELECT ?, ?, department.id FROM department WHERE department.name = ?;
 
 -- ===============================
 -- option ADD EMPLOYEE
+-- need choices for: department, existing managers, roles
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
 SELECT ?, ?, role.id FROM role WHERE role.title = ?
+
+-- ===============================
+-- option UPDATE EMPLOYEE ROLE

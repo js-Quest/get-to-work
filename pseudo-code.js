@@ -26,8 +26,8 @@
 
 // WHEN I choose to ADD A DEPARTMENT
 // THEN I am prompted to enter the name of the department and that department is added to the database
-  // prompt
-    // name of department
+  // !prompt
+    // !name of department
 
 // WHEN I choose to ADD A ROLE
 // THEN I am prompted to enter the name, salary, and department for the role and that role is added to the database
