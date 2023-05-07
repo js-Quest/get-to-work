@@ -153,9 +153,9 @@ function addDepartment() {
     .then((answer) => {
       const { name } = answer;
       const sqlString = `INSERT INTO department (name) VALUES (?)`;
-      db.query(sqlString, [name], (err, result) => {
+      db.query(sqlString, name, (err, result) => {
         if (err) throw err;
-        console.log('<<<//------successfully added new Department//------>>>');
+        console.log(`<<<//------successfully added new Department: ${name}//------>>>`);
         viewDepartments();
       })
     })
@@ -280,7 +280,7 @@ function addEmployee() {
       // need to get the ID numbers to get the keys to match role title and manager name
       db.query(sqlString, [firstInquiry.first_name, firstInquiry.last_name, firstInquiry.role.split("ID: ")[1], answer.manager.split("ID: ")[1]], (err, result) => {
         if (err) throw err;
-        console.log('<<<///------successfully added new Employee///------>>>');
+        console.log(`\n <<<///------successfully added new Employee ${firstInquiry.first_name} ${firstInquiry.last_name}///------>>>`);
         viewEmployees();
       })
     })
@@ -323,30 +323,30 @@ function updateRole() {
           else resolve(result);
         })
       })
-    })
-    .then((rolesResult) => {
-      const roles = rolesResult.map((item) => item.title)
-      inquirer.prompt([
-        {
-          type: 'list',
-          name: 'role',
-          message: 'What role would you like to assign?',
-          choices: roles
-        }
-      ])
-    })
-    .then((answer) => {
-      const sqlString3 = `SELECT id FROM role WHERE title = ?`;
-      db.query(sqlString3, answer.role, (err, result) => {
-        if (err) throw err;
-        const roleId = result[0].id;
-        const sqlString = `UPDATE employee SET role_id = ? WHERE first_name = ? AND last_name = ?`
-        db.query(sqlString, [roleId, firstName, lastName], (err, result) => {
-          if (err) throw err;
-          console.log('<<<///------successfully updated Employee Role///------>>>')
-          viewEmployees();
+        .then((rolesResult) => {
+          const roles = rolesResult.map((item) => item.title)
+          inquirer.prompt([
+            {
+              type: 'list',
+              name: 'role',
+              message: 'What role would you like to assign?',
+              choices: roles
+            }
+          ])
+            .then((answer) => {
+              const sqlString3 = `SELECT id FROM role WHERE title = ?`;
+              db.query(sqlString3, answer.role, (err, result) => {
+                if (err) throw err;
+                const roleId = result[0].id;
+                const sqlString = `UPDATE employee SET role_id = ? WHERE first_name = ? AND last_name = ?`
+                db.query(sqlString, [roleId, firstName, lastName], (err, result) => {
+                  if (err) throw err;
+                  console.log(`\n <<<///------successfully updated ${firstName} ${lastName}'s Role to ${answer.role}///------>>>`)
+                  viewEmployees();
+                })
+              })
+            })
         })
-      })
     })
 };
 
@@ -377,10 +377,9 @@ function deleteEmployee() {
           const sqlStr = `DELETE FROM employee WHERE id = ?;`;
           db.query(sqlStr, answer.employee.split('ID: ')[1], (err, result) => {
             if (err) throw err;
-            console.log('<<<///------successfully Deleted Employee///------>>>');
+            console.log(`<<<///------successfully Deleted Employee ${answer.employee.split('ID: ')[0]}///------>>>`);
             viewEmployees();
           })
-
         })
     })
 }
