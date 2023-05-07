@@ -31,18 +31,18 @@
 
 // WHEN I choose to ADD A ROLE
 // THEN I am prompted to enter the name, salary, and department for the role and that role is added to the database
-  // prompts
-    // name of role
-    // salary
-    // department (list of available ones already there)
+  // !prompts
+    // !name of role
+    // !salary
+    // !department (list of available ones already there)
 
 // WHEN I choose to ADD AN EMPLOYEE
 // THEN I am prompted to enter the employee’s first name, last name, role, and manager, and that employee is added to the database
-  // prompts
-    // first name
-    // last name
-    // role (list of ones already there)
-    // manager (list of already there, make 'none' an option)
+  // !prompts
+    // !first name
+    // !last name
+    // !role (list of ones already there)
+    // !manager (list of already there, make 'none' an option)
 
 // WHEN I choose to UPDATE AN EMPLOYEE ROLE
 // THEN I am prompted to select an employee to update and their new role and this information is updated in the database 

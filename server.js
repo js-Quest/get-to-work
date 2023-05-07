@@ -72,7 +72,7 @@ function init() {
 
 init();
 
-// SEE MORE NOTES IN query.sql FILE
+// SEE EVEN MORE NOTES IN query.sql FILE
 
 // exit app function
 function exit() {
@@ -227,7 +227,7 @@ function addEmployee() {
         type: 'list',
         name: 'role',
         message: 'what is the role of the employee?',
-        choices: [...roles]
+        choices: roles
       }
     ])
   })
@@ -276,7 +276,43 @@ function addEmployee() {
 }
 
 // update an employee's role
-function updateRole() { }
+function updateRole() { 
+  const sqlStr1 = `SELECT first_name, last_name FROM employees`;
+  let firstInquiry;
+  Promise.resolve()
+  .then(()=>{
+    return new Promise((resolve,reject)=>{
+      db.query(sqlStr1, (err, result)=> {
+        if(err) throw err;
+        else resolve(result);
+      })
+    })
+  })
+  .then((employeeResult) => {
+    // get array of existing employees for the prompt choices
+    const employees = employeeResult.map((item) => 
+      `${item.first_name} ${item.last_name}`);
+
+      return inquirer.prompt([
+        {
+          type: 'input',
+          name: 'employee',
+          message: 'Which employee needs their role updated?',
+          choices: employees
+        }
+      ])
+  })
+  .then((answer) => {
+    firstInquiry = answer;
+    const thisEmployee = firstInquiry.thisEmployee.split(' ');
+    const firstName = thisEmployee[0];
+    const lastName = thisEmployee[1];
+    const sqlStr2 = `SELECT title FROM role`;
+  })
+    
+  
+  
+}
 
 
 
