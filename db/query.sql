@@ -61,7 +61,7 @@ SELECT ?, ?, department.id FROM department WHERE department.name = ?;
 
 -- ===============================
 -- option ADD EMPLOYEE
--- need choices for: department, existing managers, roles
+-- need choices for: existing managers, existing roles
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
 SELECT ?, ?, role.id FROM role WHERE role.title = ?
 

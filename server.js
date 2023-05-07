@@ -191,11 +191,14 @@ function addRole() {
   })
 };
 
-// For ADDING EMPLOYEE dependent functions
-function selectDepartment
 
 // add an employee
-function addEmployee() { }
+function addEmployee() { 
+  const sqlString = `SELECT title FROM role WHERE title LIKE '!%manager%';`;
+  db.query(sqlString, (err, result) => {
+    if (err) throw err;
+  })
+}
 
 // update an employee's role
 function updateRole() { }
