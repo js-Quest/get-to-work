@@ -157,6 +157,8 @@ function addRole() {
   const sqlString = `SELECT department.name FROM department`;
   db.query(sqlString, (err, result) => {
     if (err) throw err;
+
+    // get array of departments to throw into the choices
     const departments = result.map((item) => `${item.name}`);
     inquirer.prompt([
       {
@@ -194,7 +196,7 @@ function addRole() {
 
 // add an employee
 function addEmployee() { 
-  const sqlStr1 = `SELECT id, title FROM role WHERE title NOT LIKE '%manager%';`;
+  const sqlStr1 = `SELECT id, title FROM role;`;
   let firstInquiry;
   Promise.resolve()
   .then(()=> {
@@ -206,7 +208,9 @@ function addEmployee() {
     })
   })
   .then((rolesResult)=> {
-    const roles = rolesResult.map((item)=> `${item.title}`)
+
+    // get array of roles to throw in choices, need ID listed to get the title name later when inserted to table
+    const roles = rolesResult.map((item) => `Title: ${item.title}, ID: ${item.id}`)
 
     return inquirer.prompt([
       {
@@ -230,8 +234,8 @@ function addEmployee() {
   .then((answer) => {
     firstInquiry = answer;
     const sqlStr2 = `
-      SELECT manager.id as manager, 
-      CONCAT(manager.first_name, ' ', manager.last_name) AS manager
+      SELECT manager.id as manager_id, 
+      CONCAT(manager.first_name, ' ', manager.last_name) AS manager_name
       FROM employee
       JOIN role ON employee.role_id = role.id
       LEFT JOIN employee AS manager ON manager.id = employee.manager_id
@@ -246,12 +250,14 @@ function addEmployee() {
     })
   })
   .then((managerResult) => {
-    const managers = managerResult.map((item)=> `${item.manager_name} id:${item.manager_id}`);
+    // get array of managers to throw in choices, need ID listed to get the manager name later when inserted to table
+    const managers = managerResult.map((item) => `Manager: ${item.manager_name}, ID: ${item.manager_id}`);
+    // console.log(managers);
     return inquirer.prompt([
       {
         type: 'list',
         name: 'manager',
-        message:'Who is the manager for this employee?',
+        message:'Who is the manager for this employee? The manager must be within the same department for proper reporting.',
         choices: [...managers, 'none']
       }
     ])
@@ -261,10 +267,11 @@ function addEmployee() {
       INSERT INTO employee (first_name, last_name, role_id, manager_id)
       VALUES (?,?,?,?);
     `;
-    db.query(sqlString, [firstInquiry.first_name, firstInquiry.last_name, firstInquiry.role.split('id: ')[1], answer.manager.split('id: ')[2], (err,result) => {
+    db.query(sqlString, [firstInquiry.first_name, firstInquiry.last_name, firstInquiry.role.split("ID: ")[1], answer.manager.split("ID: ")[1]], (err,result) => {
       if (err) throw err;
-      else console.log('<<<///------successfully added new Employee///------>>>')
-    }])
+      console.log('<<<///------successfully added new Employee///------>>>');
+      viewEmployees();
+    })
   })
 }
 
