@@ -303,8 +303,7 @@ function updateRole() {
       ])
   })
   .then((answer) => {
-    firstInquiry = answer;
-    const thisEmployee = firstInquiry.thisEmployee.split(' ');
+    const thisEmployee = answer.employee.split(' ');
     const firstName = thisEmployee[0];
     const lastName = thisEmployee[1];
     const sqlStr2 = `SELECT title FROM role`;
@@ -329,7 +328,7 @@ function updateRole() {
         db.query(sqlString3, answer.role, (err,result) => {
           if (err) throw err;
           const roleId = result[0].id;
-          const sqlString = `UPDATE employee SET role_id = ? WHERE first_name = ? AND last_name = ?'`
+          const sqlString = `UPDATE employee SET role_id = ? WHERE first_name = ? AND last_name = ?`
           db.query(sqlString, [roleId, firstName, lastName], (err,result)=>{
             if (err) throw err;
             console.log('<<<///------successfully updated Employee Role///------>>>')
