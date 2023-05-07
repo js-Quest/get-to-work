@@ -194,9 +194,77 @@ function addRole() {
 
 // add an employee
 function addEmployee() { 
-  const sqlString = `SELECT title FROM role WHERE title LIKE '!%manager%';`;
-  db.query(sqlString, (err, result) => {
-    if (err) throw err;
+  const sqlStr1 = `SELECT id, title FROM role WHERE title NOT LIKE '%manager%';`;
+  let firstInquiry;
+  Promise.resolve()
+  .then(()=> {
+    return new Promise((resolve,reject) => {
+      db.query(sqlStr1, (err, result) => {
+        if(err) reject(err)
+        else resolve(result);
+      })
+    })
+  })
+  .then((rolesResult)=> {
+    const roles = rolesResult.map((item)=> `${item.title}`)
+
+    return inquirer.prompt([
+      {
+        type: 'input',
+        name: 'first_name',
+        message: 'what is the first name of the new employee?'
+      },
+      {
+        type: 'input',
+        name: 'last_name',
+        message: 'what is the last name of the employee?'
+      },
+      {
+        type: 'list',
+        name: 'role',
+        message: 'what is the role of the employee?',
+        choices: [...roles]
+      }
+    ])
+  })
+  .then((answer) => {
+    firstInquiry = answer;
+    const sqlStr2 = `
+      SELECT manager.id as manager, 
+      CONCAT(manager.first_name, ' ', manager.last_name) AS manager
+      FROM employee
+      JOIN role ON employee.role_id = role.id
+      LEFT JOIN employee AS manager ON manager.id = employee.manager_id
+      WHERE manager.id IS NOT NULL
+      GROUP BY manager_id;
+      `;
+    return new Promise((resolve,reject) => {
+      db.query(sqlStr2, (err,result) => {
+        if (err) reject(err)
+        else resolve(result);
+      })
+    })
+  })
+  .then((managerResult) => {
+    const managers = managerResult.map((item)=> `${item.manager_name} id:${item.manager_id}`);
+    return inquirer.prompt([
+      {
+        type: 'list',
+        name: 'manager',
+        message:'Who is the manager for this employee?',
+        choices: [...managers, 'none']
+      }
+    ])
+  })
+  .then((answer) => {
+    const sqlString = `
+      INSERT INTO employee (first_name, last_name, role_id, manager_id)
+      VALUES (?,?,?,?);
+    `;
+    db.query(sqlString, [firstInquiry.first_name, firstInquiry.last_name, firstInquiry.role.split('id: ')[1], answer.manager.split('id: ')[2], (err,result) => {
+      if (err) throw err;
+      else console.log('<<<///------successfully added new Employee///------>>>')
+    }])
   })
 }
 
