@@ -363,7 +363,6 @@ function deleteEmployee() {
     })
     .then((employeeResult) => {
       const employees = employeeResult.map((item) => `${item.first_name} ${item.last_name} ID: ${item.id}`);
-      console.log(employees);
       return inquirer.prompt([
         {
           type: 'list',
