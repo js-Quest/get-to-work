@@ -302,7 +302,6 @@ function updateRole() {
       // get array of existing employees for the prompt choices
       const employee = employeeResult.map((item) =>
         `${item.first_name} ${item.last_name}`);
-      console.log(employee);
       return inquirer.prompt([
         {
           type: 'list',
