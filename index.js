@@ -155,7 +155,7 @@ function addDepartment() {
       const sqlString = `INSERT INTO department (name) VALUES (?)`;
       db.query(sqlString, name, (err, result) => {
         if (err) throw err;
-        console.log(`<<<//------successfully added new Department: ${name}//------>>>`);
+        console.log(`\n<<<//------successfully added new Department: ${name}//------>>>`);
         viewDepartments();
       })
     })
@@ -195,7 +195,7 @@ function addRole() {
         FROM department WHERE department.name = ?`;
         db.query(sqlString, [title, salary, department], (err, result) => {
           if (err) throw err;
-          console.log('<<<///------successfully added new Role///------>>>');
+          console.log('\n<<<///------successfully added new Role///------>>>');
           viewRoles();
         })
       })
@@ -376,7 +376,7 @@ function deleteEmployee() {
           const sqlStr = `DELETE FROM employee WHERE id = ?;`;
           db.query(sqlStr, answer.employee.split('ID: ')[1], (err, result) => {
             if (err) throw err;
-            console.log(`<<<///------successfully Deleted Employee ${answer.employee.split('ID: ')[0]}///------>>>`);
+            console.log(`\n<<<///------successfully Deleted Employee ${answer.employee.split('ID: ')[0]}///------>>>`);
             viewEmployees();
           })
         })
