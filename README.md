@@ -31,30 +31,23 @@
 
   
   ## Usage
-  This is an example of an employee database that one can use to manage personnel within a company.
-  
+  This is an example of an employee database that one can use to manage personnel within a company.  
+  [*Link to video walk-through*](https://drive.google.com/file/d/1kCjaIZ8Mht8hIRgb6jnVoLkZkJSZyRPC/view)
   ## Contributing
   
-Pencil Programmer  
-https://pencilprogrammer.com/self-referencing-foreign-key-in-mysql/
+[Pencil Programmer](https://pencilprogrammer.com/self-referencing-foreign-key-in-mysql/)
 
-mySQL reference   
-https://dev.mysql.com/doc/refman/8.0/en/data-types.html
+[mySQL reference](https://dev.mysql.com/doc/refman/8.0/en/data-types.html)
 
-MySQL2 NPM docs  
-https://www.npmjs.com/package/mysql2
+[MySQL2 NPM docs](https://www.npmjs.com/package/mysql2)
 
-CockRoach Labs  
-https://www.cockroachlabs.com/blog/sql-cheat-sheet/
+[CockRoach Labs](https://www.cockroachlabs.com/blog/sql-cheat-sheet/)
  
-Freecodecamp  
-https://www.freecodecamp.org/news/javascript-es6-promises-for-beginners-resolve-reject-and-chaining-explained/
+[Freecodecamp](https://www.freecodecamp.org/news/javascript-es6-promises-for-beginners-resolve-reject-and-chaining-explained/)
 
-W3 Schools  
-https://www.w3schools.com/sql/sql_like.asp
+[W3 Schools](https://www.w3schools.com/sql/sql_like.asp)
 
-ASCII with Eric Murphy  
-https://www.youtube.com/watch?v=e1uqSCRodyg
+[ASCII with Eric Murphy](https://www.youtube.com/watch?v=e1uqSCRodyg)
 
   ## Tests
   N/A
@@ -64,7 +57,7 @@ https://www.youtube.com/watch?v=e1uqSCRodyg
 
   ## Questions
   For additional information and contact, please check out my github profile:  
-  https://github.com/js-Quest
+  [js-Quest](https://github.com/js-Quest)
 
   
   
